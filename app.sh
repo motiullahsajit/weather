@@ -38,11 +38,10 @@ get_weather() {
     load_user_preferences
 
     if [ -z "$DEFAULT_LOCATION" ]; then
-        echo "Default location is not set. Please set a default location using option 2 in the main menu."
-        return
+        DEFAULT_LOCATION="Dhaka"
     fi
 
-    API_URL="http://api.openweathermap.org/data/2.5/weather?q=$DEFAULT_LOCATION&appid=$API_KEY&units=$DEFAULT_TEMP_UNIT"
+    API_URL="http://api.openweathermap.org/data/2.5/weather?q=$(tr '[:upper:]' '[:lower:]' <<< "$DEFAULT_LOCATION")&appid=$API_KEY&units=$DEFAULT_TEMP_UNIT"
 
     wget -qO- "$API_URL" > weather_data.json
 
@@ -67,7 +66,6 @@ get_weather() {
     rm weather_data.json
 }
 
-
 show_main_menu() {
     while true; do
         echo "Weather Information Menu:"
@@ -79,7 +77,7 @@ show_main_menu() {
         case "$choice" in
             1) get_weather ;;
             2) set_user_preferences ;;
-            3) read -p "Enter custom location: " LOCATION; get_weather ;;
+            3) read -p "Enter custom location: " DEFAULT_LOCATION; get_weather ;;
             4) exit ;;
             *) echo "Invalid choice. Please select a valid option." ;;
         esac
