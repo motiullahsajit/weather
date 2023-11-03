@@ -78,21 +78,19 @@ show_main_menu() {
         echo "3. Enter Custom Location"
         echo "4. Weather-Dependent To-Do List"
         echo "5. Weather-Based Gardening Planner"
-        echo "6. List Scheduled Events"
-        echo "7. Add Event"
-        echo "8. List Scheduled Events and To-Do Tasks"
-        echo "9. Exit"
-        read -p "Select an option (1/2/3/4/5/6/7/8/9): " choice
+        echo "6. Add Event"
+        echo "7. List Weather-Dependent Events List"
+        echo "8. Exit"
+        read -p "Select an option (1/2/3/4/5/6/7/8): " choice
         case "$choice" in
             1) get_weather ;;
             2) set_user_preferences ;;
             3) read -p "Enter custom location: " DEFAULT_LOCATION; get_weather ;;
             4) todo_list_menu ;;
             5) gardening_planner ;;
-            6) list_events ;;
-            7) add_event ;;
-            8) list_events_and_tasks ;;
-            9) exit ;;
+            6) add_event ;;
+            7) list_events ;;
+            8) exit ;;
             *) echo "Invalid choice. Please select a valid option." ;;
         esac
     done
@@ -132,9 +130,9 @@ list_todo_tasks() {
     if [ -f "$TODO_LIST_FILE" ]; then
         echo "Weather-Dependent To-Do Tasks:"
         cat "$TODO_LIST_FILE"
-    } else {
+    else
         echo "No to-do tasks added."
-    }
+    fi
 }
 
 gardening_planner() {
@@ -154,9 +152,9 @@ gardening_planner() {
 
     if [ "$current_weather_description" == "$desired_weather_condition" ]; then
         echo "The weather is suitable for your gardening task: $gardening_task"
-    else {
+    else
         echo "The weather is not suitable for your gardening task: $gardening_task"
-    }
+    fi
 }
 
 get_weather_description() {
@@ -177,15 +175,6 @@ get_weather_description() {
     echo "$description"
 }
 
-list_events() {
-    if [ -f "$EVENTS_FILE" ]; then
-        echo "Scheduled Events:"
-        cat "$EVENTS_FILE"
-    } else {
-        echo "No events scheduled."
-    }
-}
-
 add_event() {
     read -p "Enter event name: " event_name
     read -p "Enter event date (YYYY-MM-DD): " event_date
@@ -200,12 +189,14 @@ add_event() {
     echo "Event Location: $event_location"
 }
 
-list_events_and_tasks() {
-    echo "Scheduled Events:"
-    list_events
-
-    echo "Weather-Dependent To-Do Tasks:"
-    list_todo_tasks
+list_events() {
+    if [ -f "$EVENTS_FILE" ]; then
+        echo "Weather-Dependent Events List:"
+        cat "$EVENTS_FILE"
+    else
+        echo "No events scheduled."
+    fi
 }
+
 
 show_main_menu
